@@ -34,21 +34,22 @@ class MCPClient:
         )
         await self._session.initialize()
 
+    @property
     def session(self) -> ClientSession:
         if self._session is None:
             raise ConnectionError(
-                "Client session not initialized or cache not populated. Call connect_to_server first."
+                "Client session not initialized or cache not populated. Call connect first."
             )
         return self._session
 
     async def list_tools(self) -> list[types.Tool]:
-        # TODO: Return a list of tools defined by the MCP server
-        return []
+        result = await self.session.list_tools()
+        return result.tools
 
     async def call_tool(
         self, tool_name: str, tool_input: dict
     ) -> types.CallToolResult | None:
-        # TODO: Call a particular tool and return the result
+        result = await self.session.call_tool(tool_name, tool_input)
         return None
 
     async def list_prompts(self) -> list[types.Prompt]:
@@ -78,7 +79,6 @@ class MCPClient:
 # For testing
 async def main():
     async with MCPClient(
-        # If using Python without UV, update command to 'python' and remove "run" from args.
         command="uv",
         args=["run", "mcp_server.py"],
     ) as _client:

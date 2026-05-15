@@ -27,13 +27,14 @@ def read_doc(doc_id: str = Field(description="The ID of the document to read."))
 @mcp.tool(name = "Edit document", description = "Edits the contents of a document given its ID and new content.")
 
 def edit_doc(doc_id: str = Field(description="The ID of the document to edit."),
-             old_content: str = Field(description="The current content of the document."),
-             new_content: str = Field(description="The new content to replace the old content.")) -> str:
+             old_text: str = Field(description="The current content of the document."),
+             new_text: str = Field(description="The new content to replace the old content.")) -> str:
     if doc_id not in docs:
         raise ValueError(f"Document with ID '{doc_id}' not found.")
-    if docs[doc_id] != old_content:
-        raise ValueError(f"Current content does not match the document's content.")
-    docs[doc_id] = new_content
+    if docs[doc_id].__contains__(old_text):
+        docs[doc_id] = docs[doc_id].replace(old_text, new_text)
+    else:
+        raise ValueError(f"Old text '{old_text}' not found in document '{doc_id}'.")
     return f"Document '{doc_id}' updated successfully."
 
 

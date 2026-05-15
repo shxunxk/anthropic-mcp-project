@@ -17,7 +17,7 @@ class Claude:
 
         return message.content if hasattr(message, "content") else str(message)
 
-    def add_user_message(self, messages: list, message):
+    def add_user_message(self, messages: list, message):--
         user_message = {
             "role": "user",
             "content": self._message_text(message),
