@@ -43,14 +43,20 @@ class MCPClient:
         return self._session
 
     async def list_tools(self) -> list[types.Tool]:
-        result = await self.session.list_tools()
-        return result.tools
+        try:
+            result = await self.session.list_tools()
+            return result.tools
+        except Exception as e:
+            raise ValueError(f"Error retrieving tools: {str(e)}")
 
     async def call_tool(
         self, tool_name: str, tool_input: dict
     ) -> types.CallToolResult | None:
-        result = await self.session.call_tool(tool_name, tool_input)
-        return None
+        try:
+            result = await self.session.call_tool(tool_name, tool_input)
+            return result|None
+        except Exception as e:
+            raise ValueError(f"Error calling tool '{tool_name}': {str(e)}")
 
     async def list_prompts(self) -> list[types.Prompt]:
         # TODO: Return a list of prompts defined by the MCP server
@@ -82,7 +88,10 @@ async def main():
         command="uv",
         args=["run", "mcp_server.py"],
     ) as _client:
-        pass
+        result = await _client.list_tools()
+        print("Available tools:")
+        for tool in result:
+            print(f"- {tool.name}: {tool.description}")
 
 
 if __name__ == "__main__":

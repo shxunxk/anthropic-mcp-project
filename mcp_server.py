@@ -39,6 +39,17 @@ def edit_doc(doc_id: str = Field(description="The ID of the document to edit."),
 
 
 # TODO: Write a resource to return all doc id's
+
+@mcp.tool(
+    name = 'List IDs',
+    description = 'Returns IDs of all the documents.'
+)
+
+def list_doc_ids():
+    try:
+        return list(docs.keys())
+    except Exception as e:
+        raise ValueError(f"Error retrieving document IDs: {str(e)}")
 # TODO: Write a resource to return the contents of a particular doc
 # TODO: Write a prompt to rewrite a doc in markdown format
 # TODO: Write a prompt to summarize a doc
